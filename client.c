@@ -29,12 +29,13 @@ static char name_buf[] = "PulseAudio default device";
 int pulseaudio_begin()
 {
   int error;
-
+   /* The Sample format to use */
   static const pa_sample_spec ss = {
   	.format = PA_SAMPLE_S16LE,
   	.rate = RATE,
   	.channels = 2
   };
+  /* Create a new record stream */
   if (!(s = pa_simple_new(NULL, "xyz", PA_STREAM_RECORD, NULL, "record", &ss, NULL, NULL, &error))) {
     printf("Error: pulseaudio: pa_simple_new() failed: %s\n", pa_strerror(error));
     return 1;
@@ -125,10 +126,12 @@ int main(int argc, char *argv[])
 	pulseaudio_begin();
 	while(1)
 	{
-	    pulseaudio_read(buffer, 32);
-    	if (send(sockfd, &buffer, 32, 0) == -1)
+	 /* Capture data from microphone */
+	 pulseaudio_read(buffer, 32);
+	 /*Send it to server*/
+    	 if (send(sockfd, &buffer, 32, 0) == -1)
     	  perror("send");
-	    usleep(5);
+	 usleep(5);
 	}
     close(sockfd);
     pulseaudio_end();
