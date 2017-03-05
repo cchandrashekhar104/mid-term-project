@@ -69,29 +69,26 @@ int pulseaudio_read (int16_t *buf, int sampnum)
 
 int main()
 {
-	pulseaudio_begin();
-
-
+pulseaudio_begin();
 while(1)
 {
-	pulseaudio_read(buffer, 32);
+  pulseaudio_read(buffer, 32);
   /* Playback the recorded data ... */
-	if (pa_simple_write(s1, buffer, 32, &error) < 0) 
+  if (pa_simple_write(s1, buffer, 32, &error) < 0) 
   {
-	  fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
-	  goto finish;
-	}
+    fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
+    goto finish;
+  }
   /* And write it to STDOUT */    
   if (write(STDOUT_FILENO, buffer, 32) != 32) 
   {
     fprintf(stderr, __FILE__": write() failed: %s\n", strerror(errno));
     goto finish;
-   }
-	usleep(5);
+  }
+  usleep(5);
 }
 
 finish:
-	pulseaudio_end();
-
-	return 0;
+  pulseaudio_end();
+return 0;
 }
